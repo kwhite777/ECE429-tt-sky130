@@ -5,7 +5,7 @@
 
 `default_nettype none
 
-module pm32 (
+module tt_um_kaileywhite (
     input  wire [7:0] ui_in,    // Dedicated inputs
     output wire [7:0] uo_out,   // Dedicated outputs
     input  wire [7:0] uio_in,   // IOs: Input path
