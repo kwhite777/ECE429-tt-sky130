@@ -9,11 +9,19 @@ You can also include images in this folder and reference them in the markdown. E
 
 ## How it works
 
-This design implements a PM32 multiplier. It takes two input values and produces their product using combinational logic
+This project implements a PM32 multiplier using Verilog. The design takes two binary input values and computes their product 
+using combinational logic. The inputs are provided through the ui_in pins. The lower bits of ui_in represent one operand, and 
+the upper bits represent the second operand. The multiplier processes these inputs and produces the result. The output of the 
+multiplication is assigned to the uo_out pins. Since the output width is limited, only the lower bits of the full product may 
+be shown.
 
 ## How to test
-
-Provides inupt values through ui_in. The output uo_out will show the result of the multiplication
+To test the design, provide input values through the ui_in pins.
+For example:
+- Set the lower 4 bits of ui_in to one number
+- Set the upper 4 bits of ui_in to another number
+The output uo_out should display the product of these two numbers.
+You can verify correctness by comparing the output to the expected multiplication result.
 
 ## External hardware
 
