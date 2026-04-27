@@ -25,4 +25,7 @@ You can verify correctness by comparing the output to the expected multiplicatio
 
 ## External hardware
 
-List external hardware used in your project (e.g. PMOD, LED display, etc), if any
+This project does not require any external hardware.
+
+All functionality is implemented inside the digital logic of the design. Inputs are provided through the on-chip input pins, 
+and outputs are observed through the output pins. No additional components, sensors, or peripherals are needed.
