@@ -16,12 +16,25 @@ module tt_um_kaileywhite (
     input  wire       rst_n     // reset_n - low to reset
 );
 
+
+    wire [3:0] a = ui_in[3:0];
+    wire [3:0] b = un_in[7:4];
+
+    wire [7:0} p;
+
+    pm32 dut (
+	.a(a),
+	.b(b),
+	.p(p)
+    );
+
+
   // All output pins must be assigned. If not used, assign to 0.
-  assign uo_out  = ui_in + uio_in;  // Example: ou_out is the sum of ui_in and uio_in
-  assign uio_out = 0;
-  assign uio_oe  = 0;
+  assign uo_out  = p;  // Example: ou_out is the sum of ui_in and uio_in
+  assign uio_out = 8'b0;
+  assign uio_oe  = 8'b0;
 
   // List all unused inputs to prevent warnings
-  wire _unused = &{ena, clk, rst_n, 1'b0};
+  wire _unused = &{ena, clk, rst_n, uio_in};
 
 endmodule
