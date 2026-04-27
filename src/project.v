@@ -20,17 +20,13 @@ module tt_um_kaileywhite (
     wire [3:0] a = ui_in[3:0];
     wire [3:0] b = un_in[7:4];
 
-    wire [7:0} p;
+    wire [7:0] product;
 
-    pm32 dut (
-	.a(a),
-	.b(b),
-	.p(p)
-    );
+    assign product = a * b
 
 
   // All output pins must be assigned. If not used, assign to 0.
-  assign uo_out  = p;  // Example: ou_out is the sum of ui_in and uio_in
+  assign uo_out  = product;  // Example: ou_out is the sum of ui_in and uio_in
   assign uio_out = 8'b0;
   assign uio_oe  = 8'b0;
 
