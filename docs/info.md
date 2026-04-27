@@ -9,11 +9,11 @@ You can also include images in this folder and reference them in the markdown. E
 
 ## How it works
 
-Explain how your project works
+This design implements a PM32 multiplier. It takes two input values and produces their product using combinational logic
 
 ## How to test
 
-Explain how to use your project
+Provides inupt values through ui_in. The output uo_out will show the result of the multiplication
 
 ## External hardware
 
