@@ -27,5 +27,5 @@ You can verify correctness by comparing the output to the expected multiplicatio
 
 This project does not require any external hardware.
 
-All functionality is implemented inside the digital logic of the design. Inputs are provided through the on-chip input pins, 
-and outputs are observed through the output pins. No additional components, sensors, or peripherals are needed.
+All functionality is implemented inside the digital logic of the design. Inputs are provided through the on-chip input 
+pins, and outputs are observed through the output pins. No additional components, sensors, or peripherals are needed.
