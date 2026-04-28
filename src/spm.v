@@ -1,10 +1,10 @@
 /*
     A Serial-Parallel Multiplier (SPM)
-    Modeled after the design outlined by ATML for their 
+    Modeled after the design outlined by ATML for their
     AT6000 FPGA in application notes DOC0716 and DOC0529:
         - https://ww1.microchip.com/downloads/en/AppNotes/DOC0529.PDF
         - https://ww1.microchip.com/downloads/en/AppNotes/DOC0716.PDF
-    
+
     Implemented by mshalan@aucegypt.edu, 2016
 */
 
@@ -12,7 +12,7 @@
 `default_nettype    none
 
 module spm #(parameter SIZE = 32)(
-    input wire              clk, 
+    input wire              clk,
     input wire              rst,
     input wire              y,
     input wire [SIZE-1:0]   x,
@@ -24,13 +24,13 @@ module spm #(parameter SIZE = 32)(
     genvar i;
 
     CSADD csa0 (.clk(clk), .rst(rst), .x(x[0]&y), .y(pp[1]), .sum(p));
-    
-    generate 
+
+    generate
         for(i=1; i<SIZE-1; i=i+1) begin
             CSADD csa (.clk(clk), .rst(rst), .x(x[i]&y), .y(pp[i+1]), .sum(pp[i]));
-        end 
+        end
     endgenerate
-    
+
     TCMP tcmp (.clk(clk), .rst(rst), .a(x[SIZE-1]&y), .s(pp[SIZE-1]));
 
 endmodule
@@ -38,9 +38,9 @@ endmodule
 
 // Carry Save Adder
 module CSADD(
-    input wire  clk, 
+    input wire  clk,
     input wire  rst,
-    input wire  x, 
+    input wire  x,
     input wire  y,
     output reg  sum
 );
@@ -70,12 +70,12 @@ endmodule
 
 // 2's Complement
 module TCMP (
-    input wire  clk, 
+    input wire  clk,
     input wire  rst,
-    input wire  a, 
+    input wire  a,
     output reg  s
 );
-  
+
     reg z;
 
     always @(posedge clk or posedge rst) begin
@@ -90,3 +90,4 @@ module TCMP (
     end
 
 endmodule
+
