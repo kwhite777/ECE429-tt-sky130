@@ -21,7 +21,7 @@ async def test_combination_lock(dut):
     #
     dut.ui_in.value = 0b00001011
 
-    await Timer(1, units="ns")
+    await Timer(1, unit="ns")
 
     assert dut.uo_out.value[0] == 1, "UNLOCK should be HIGH"
     assert dut.uo_out.value[1] == 0, "ALARM should be LOW"
@@ -33,7 +33,7 @@ async def test_combination_lock(dut):
     #
     dut.ui_in.value = 0b00000011
 
-    await Timer(1, units="ns")
+    await Timer(1, unit="ns")
 
     assert dut.uo_out.value[0] == 0, "UNLOCK should be LOW"
     assert dut.uo_out.value[1] == 1, "ALARM should be HIGH"
@@ -45,7 +45,7 @@ async def test_combination_lock(dut):
     #
     dut.ui_in.value = 0b00001111
 
-    await Timer(1, units="ns")
+    await Timer(1, unit="ns")
 
     assert dut.uo_out.value[0] == 0, "UNLOCK should be LOW"
     assert dut.uo_out.value[1] == 1, "ALARM should be HIGH"
@@ -57,7 +57,7 @@ async def test_combination_lock(dut):
     #
     dut.ui_in.value = 0b00010000
 
-    await Timer(1, units="ns")
+    await Timer(1, unit="ns")
 
     assert dut.uo_out.value == 0, "All outputs should reset"
 
@@ -70,7 +70,7 @@ async def test_combination_lock(dut):
     #
     dut.ui_in.value = 0b00100101
 
-    await Timer(1, units="ns")
+    await Timer(1, unit="ns")
 
     assert dut.uo_out.value[0] == 1, "UNLOCK should be HIGH in mode 1"
     assert dut.uo_out.value[1] == 0, "ALARM should be LOW"
