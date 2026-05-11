@@ -2,75 +2,76 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import cocotb
-from cocotb.clock import Clock
-from cocotb.triggers import ClockCycles
-
-
-async def reset_dut(dut):
-    dut.ui_in.value = 0
-    dut.uio_in.value = 0
-    dut.ena.value = 1
-
-    dut.rst_n.value = 0
-    await ClockCycles(dut.clk, 5)
-
-    dut.rst_n.value = 1
-    await ClockCycles(dut.clk, 2)
-
-
-async def run_multiply_case(dut, mc, mp):
-    assert 0 <= mc <= 127
-    assert 0 <= mp <= 255
-
-    dut.ui_in.value = mc
-    dut.uio_in.value = mp
-    await ClockCycles(dut.clk, 2)
-
-    dut.ui_in.value = (1 << 7) | mc
-    await ClockCycles(dut.clk, 1)
-
-    dut.ui_in.value = mc
-
-    for _ in range(80):
-        await ClockCycles(dut.clk, 1)
-        if int(dut.uo_out.value) & 0x80:
-            break
-
-    raw_out = int(dut.uo_out.value)
-    done = (raw_out >> 7) & 1
-    got_product_low7 = raw_out & 0x7F
-    expected_product_low7 = (mc * mp) & 0x7F
-
-    assert done == 1, f"done never went high for mc={mc}, mp={mp}"
-    assert got_product_low7 == expected_product_low7, (
-        f"wrong product for mc={mc}, mp={mp}: "
-        f"got low7={got_product_low7}, expected low7={expected_product_low7}"
-    )
+from cocotb.triggers import Timer
 
 
 @cocotb.test()
-async def test_pm32_selected_cases(dut):
-    clock = Clock(dut.clk, 10, unit="us")
-    cocotb.start_soon(clock.start())
+async def test_combination_lock(dut):
 
-    test_cases = [
-        (0, 0),
-        (0, 7),
-        (1, 1),
-        (1, 255),
-        (2, 3),
-        (3, 5),
-        (7, 9),
-        (10, 12),
-        (15, 15),
-        (31, 4),
-        (63, 2),
-        (64, 2),
-        (100, 3),
-        (127, 1),
-        (127, 255),
-    ]
+    dut.ena.value = 1
+    dut.uio_in.value = 0
 
-    for mc, mp in test_cases:
-        await reset_dut(dut)
-        await run_multiply_case(dut, mc, mp)
+    #
+    # TEST 1
+    # Correct code in mode 0
+    #
+    # code = 1011
+    # reset = 0
+    # mode = 0
+    #
+    dut.ui_in.value = 0b00001011
+
+    await Timer(1, units="ns")
+
+    assert dut.uo_out.value[0] == 1, "UNLOCK should be HIGH"
+    assert dut.uo_out.value[1] == 0, "ALARM should be LOW"
+    assert dut.uo_out.value[2] == 0, "TAMPER should be LOW"
+
+    #
+    # TEST 2
+    # Wrong code
+    #
+    dut.ui_in.value = 0b00000011
+
+    await Timer(1, units="ns")
+
+    assert dut.uo_out.value[0] == 0, "UNLOCK should be LOW"
+    assert dut.uo_out.value[1] == 1, "ALARM should be HIGH"
+    assert dut.uo_out.value[2] == 0, "TAMPER should be LOW"
+
+    #
+    # TEST 3
+    # Tamper detection
+    #
+    dut.ui_in.value = 0b00001111
+
+    await Timer(1, units="ns")
+
+    assert dut.uo_out.value[0] == 0, "UNLOCK should be LOW"
+    assert dut.uo_out.value[1] == 1, "ALARM should be HIGH"
+    assert dut.uo_out.value[2] == 1, "TAMPER should be HIGH"
+
+    #
+    # TEST 4
+    # Reset active
+    #
+    dut.ui_in.value = 0b00010000
+
+    await Timer(1, units="ns")
+
+    assert dut.uo_out.value == 0, "All outputs should reset"
+
+    #
+    # TEST 5
+    # Mode 1 correct code
+    #
+    # mode = 1
+    # code = 0101
+    #
+    dut.ui_in.value = 0b00100101
+
+    await Timer(1, units="ns")
+
+    assert dut.uo_out.value[0] == 1, "UNLOCK should be HIGH in mode 1"
+    assert dut.uo_out.value[1] == 0, "ALARM should be LOW"
+    assert dut.uo_out.value[2] == 0, "TAMPER should be LOW"
